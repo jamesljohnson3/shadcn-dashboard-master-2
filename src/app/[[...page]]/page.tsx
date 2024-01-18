@@ -4,7 +4,7 @@ import Head from "next/head";
 import { RenderBuilderContent } from "@/lib/builder";
 
 // Replace with your Public API Key
-builder.init("fc8480a6998e49d7af4ee889483a2619");
+builder.init("ba26b1f01a7a45cdbbff41a67447be22");
 
 interface PageProps {
   params: {
