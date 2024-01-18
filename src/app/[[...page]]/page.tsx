@@ -14,7 +14,7 @@ interface PageProps {
 
 export default async function SectionExample(props: PageProps) {
   const content = await builder
-    .get("block1", {
+    .get("block-1", {
       prerender: false,
     })
     .toPromise();
