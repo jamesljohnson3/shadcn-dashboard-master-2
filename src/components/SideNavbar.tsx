@@ -9,7 +9,6 @@ type Props = {};
 import {
   ShoppingCart,
   LayoutDashboard,
-  UsersRound,
   Settings,
   ChevronRight
 } from "lucide-react";
