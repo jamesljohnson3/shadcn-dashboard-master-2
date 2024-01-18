@@ -12,12 +12,9 @@ interface PageProps {
   };
 }
 
-export default async function Page(props: PageProps) {
+export default async function SectionExample(props: PageProps) {
   const content = await builder
-    .get("page", {
-      userAttributes: {
-        urlPath: "/" + (props?.params?.page?.join("/") || ""),
-      },
+    .get("block1", {
       prerender: false,
     })
     .toPromise();
@@ -27,8 +24,31 @@ export default async function Page(props: PageProps) {
       <Head>
         <title>{content?.data.title}</title>
       </Head>
+      <div
+        style={{
+          background: "purple",
+          fontSize: 24,
+          textAlign: "center",
+          height: 200,
+          padding: 20,
+        }}
+      >
+        Non builder content
+      </div>
       {/* Render the Builder page */}
       <RenderBuilderContent content={content} />
+      <div
+        style={{
+          background: "blue",
+          fontSize: 14,
+          textAlign: "center",
+          height: 200,
+          padding: 20,
+        }}
+      >
+        Non builder content
+      </div>
     </>
   );
 }
+s
