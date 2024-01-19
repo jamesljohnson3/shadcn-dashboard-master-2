@@ -1,0 +1,36 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import type { User } from "next-auth";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { buttonVariants } from "./ui/button";
+import UserAvatar from "./UserAvatar";
+
+function ProfileLink({ user }: { user: User }) {
+  const pathname = usePathname();
+
+  const href = `/dashboard/${user.username}`;
+  const isActive = pathname === href;
+  console.log('userID:',user);
+
+  return (
+    <Link
+      href={href}
+      className={buttonVariants({
+        variant: isActive ? "secondary" : "ghost",
+        className: "navLink",
+      })}
+    >
+      <UserAvatar
+        user={user}
+        className={`h-6 w-6 ${isActive && "border-2 border-white"}`}
+      />
+
+      
+      
+    </Link>
+  );
+}
+
+export default ProfileLink;
