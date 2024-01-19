@@ -28,9 +28,15 @@ export async function generateMetadata(
 
 async function ProfileLayout({ children, params: { username } }: Props) {
   const profile = await fetchProfile(username);
-  const session = await authOptions;
-  console.log("Fetched session:", session);
+  const params = await authOptions;
+  //   the followerId here is the id of the user who is following the profile
+  const isCurrentUser = params.session?.user.id === profile?.id;
 
+  // Rest of your code
+
+  const isFollowing = profile?.followedBy.some(
+    (user: { followerId: any }) => user.followerId === params.session?.user.id
+  );
   if (!profile) {
     notFound();
   }

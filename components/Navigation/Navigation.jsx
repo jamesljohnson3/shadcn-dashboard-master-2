@@ -14,8 +14,7 @@ const pages = [
   { title: 'Campaigns', path: '/dashboard/campaigns' },
   { title: 'Feeds', path: '/dashboard/inventory' },
   { title: 'Links', path: '/dashboard/links' },
-  { title: 'Functions', path: '/dashboard/functions' },
-  { title: 'Inputs', path: '/dashboard/inputs' },
+  { title: 'Reels', path: '/dashboard/Videos' },
   { title: 'Analytics', path: '/dashboard/marketing' },
 ];
 
