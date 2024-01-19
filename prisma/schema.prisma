@@ -1,0 +1,750 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum SpaceUserRole {
+    USER
+    ADMIN
+}
+
+enum InvitationStatus {
+    ACCEPTED
+    PENDING
+    DECLINED
+}
+
+enum SubscriptionType {
+    FREE
+    STANDARD
+    PREMIUM
+}
+
+enum TeamRole {
+    MEMBER
+    OWNER
+}
+
+model Account {
+  id                            String      @id @default(cuid())
+  userId                        String      @map("user_id")
+  type                          String
+  provider                      String
+  providerAccountId             String      @map("provider_account_id")
+  refresh_token                 String?     @db.Text
+  access_token                  String?     @db.Text
+  expires_at                    Int?
+  token_type                    String?
+  scope                         String?
+  id_token                      String?     @db.Text
+  session_state                 String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id                            String      @id @default(cuid())
+  sessionToken                  String      @unique @map("session_token")
+  userId                        String      @map("user_id")
+  expires                       DateTime
+  user                          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+
+
+model User {
+   id String @id() @default(uuid())
+
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    
+    username      String?     @unique
+    bio           String?
+    website       String?
+    gender        String?
+    email         String?     @unique
+emailVerified                 DateTime?   @map("email_verified")
+  emailVerificationToken        String?     @unique @map("email_verification_token")
+  passwordHash                  String?     @map("password_hash")
+  resetPasswordToken            String?     @unique @map("reset_password_token")
+  resetPasswordTokenExpiry      DateTime?   @map("reset_password_token_expiery")
+      image         String?
+    password String?
+    name String?
+surname                       String?
+  Product Product[]
+  Cart Cart[]
+  Review Review[]
+    Purchased Purchased[]
+    links Link[]
+    projects ProjectUsers[]
+    blueprints Blueprint[]
+    spaces SpaceUser[]
+    lists List[]
+    todos Todo[]
+      sites         Site[]
+    workspaces Workspace[]
+    userCode String @unique() @default(cuid())
+    posts         Post[]
+    saved         SavedPost[]
+    likes         Like[]
+    comments      Comment[]
+    followedBy    Follows[]   @relation("following")
+    following     Follows[]   @relation("follower")
+    accounts      Account[]
+    sessions      Session[]
+    membership Member[] @relation("membership")
+    invitedMembers Member[] @relation("inviter")
+    customerPayment CustomerPayment?
+    domains Domain[]
+  ActivateToken   ActivateToken[]
+
+    @@unique([userCode, email])
+    @@map("users")
+    
+}
+model VerificationToken {
+  identifier                    String
+  token                         String      @unique
+  expires                       DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model ActivateToken {
+  id  Int  @id @default(autoincrement())
+  token String @unique
+  activatedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userId    String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NewsletterSubscriber {
+  id                            String      @id @default(cuid())
+  email                         String      @unique 
+  createdAt                     DateTime    @default(now()) @map("created_at")
+
+  @@map("newsletter_subscribers")
+}
+
+model Movie {
+  id            Int         @id
+  imageString   String
+  title         String
+  age           Int
+  duration      Float
+  overview      String
+  release       Int
+  videoSource   String
+  category      String
+  youtubeString String
+  WatchLists    WatchList[]
+
+  createdAt DateTime @default(now())
+}
+
+model WatchList {
+  id     String @id @default(uuid())
+  userId String
+
+  Movie   Movie? @relation(fields: [movieId], references: [id])
+  movieId Int?
+}
+
+
+model Form {
+    id Int @id() @default(autoincrement())
+    userId String
+    createdAt DateTime @default(now())
+    published Boolean @default(false)
+    name String
+    description String @default("")
+    content String @default("[]")
+    thumbnail String @default("https://unlimitednow.live/assets/images/logo3-369x208.png")
+    visits Int @default(0)
+    submissions Int @default(0)
+    shareURL String @unique() @default(uuid())
+    FormSubmissions FormSubmissions[]
+    space Space @relation(fields: [spaceId], references: [id])
+    spaceId String
+
+    @@unique([name, userId])
+}
+
+model FormSubmissions {
+    id Int @id() @default(autoincrement())
+    createdAt DateTime @default(now())
+    formId Int
+    form Form @relation(fields: [formId], references: [id])
+    content String
+}
+
+model channels {
+    id String @id() @default(uuid())
+}
+
+/// @@deny('all', auth() == null)
+/// @@allow('create', true)
+/// @@allow('read', members ? [user == auth()])
+/// @@allow('update,delete', members ? [user == auth() && role == ADMIN])
+model Space {
+    id String @id() @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    /// @length(4, 50)
+    name String
+    /// @regex('^[0-9a-zA-Z]{4,16}$')
+    slug String @unique()
+    members SpaceUser[]
+    lists List[]
+    forms Form[]
+    workspace Workspace @relation(fields: [workspaceId], references: [id])
+    workspaceId String
+}
+
+/// @@deny('all', auth() == null)
+/// @@allow('create,update,delete', space.members ? [user == auth() && role == ADMIN])
+/// @@allow('read', space.members ? [user == auth()])
+model SpaceUser {
+    id String @id() @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId String
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    role SpaceUserRole
+
+    @@unique([userId, spaceId])
+}
+
+/// @@allow('create', true)
+/// @@allow('read', spaces ? [space.members ? [user == auth()]])
+/// @@allow('all', auth() == this)
+
+
+model Site {
+  id            String   @id @default(cuid())
+  name          String?
+  description   String?  @db.Text
+  logo          String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/JRajRyC-PhBHEinQkupt02jqfKacBVHLWJq7Iy.png") @db.Text
+  font          String   @default("font-cal")
+  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
+  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  subdomain     String?  @unique
+  customDomain  String?  @unique
+  message404    String?  @default("Blimey! You've found a page that doesn't exist.") @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId        String?
+  posts         Post[]
+
+  @@index([userId])
+}
+model CustomerPayment {
+    id String @id() @default(cuid())
+    paymentId String @unique()
+    customerId String @unique()
+    email String? @unique()
+    subscriptionType SubscriptionType @default(FREE)
+    createdAt DateTime? @default(now())
+    deletedAt DateTime?
+    updatedAt DateTime? @updatedAt()
+    customer User @relation(fields: [customerId], references: [id])
+
+    @@map("customerPayments")
+}
+
+model Domain {
+    id String @id() @default(cuid())
+    workspaceId String
+    addedById String
+    name String
+    subdomain String?
+    verified Boolean? @default(true)
+    value String?
+    createdAt DateTime? @default(now())
+    deletedAt DateTime?
+    updatedAt DateTime? @updatedAt()
+    addedBy User @relation(fields: [addedById], references: [id])
+    workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+    @@map("domains")
+}
+
+model Member {
+    id String @id() @default(cuid())
+    workspaceId String
+    email String
+    inviter String
+    invitedAt DateTime? @default(now())
+    joinedAt DateTime?
+    deletedAt DateTime?
+    updatedAt DateTime? @updatedAt()
+    status InvitationStatus @default(PENDING)
+    teamRole TeamRole @default(MEMBER)
+    member User? @relation(fields: [email], references: [email], name: "membership")
+    invitedBy User? @relation(fields: [inviter], references: [email], name: "inviter")
+    workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+    @@unique([workspaceId, email])
+    @@map("members")
+}
+
+
+model Workspace {
+    id String @id() @default(cuid())
+    workspaceCode String @unique() @default(cuid())
+    inviteCode String @unique() @default(cuid())
+    creatorId String
+    name String
+    photoUrl String
+    slug String
+    createdAt DateTime? @default(now())
+    deletedAt DateTime?
+    updatedAt DateTime? @updatedAt()
+    creator User @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+    members Member[]
+    domains Domain[]
+    spaces Space[]
+
+    @@unique([workspaceCode, inviteCode])
+    @@map("workspaces")
+}
+
+/// @@deny('all', auth() == null)
+/// @@allow('read', owner == auth() || (space.members ? [user == auth()] && !private))
+/// @@allow('create', owner == auth() && space.members ? [user == auth()])
+/// @@allow('update', owner == auth() && space.members ? [user == auth()] && future().owner == owner)
+/// @@allow('delete', owner == auth())
+model List {
+    id String @id() @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+    spaceId String
+    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId String
+    /// @length(1, 100)
+    title String
+    private Boolean @default(false)
+    todos Todo[]
+}
+
+/// @@deny('all', auth() == null)
+/// @@allow('all', list.owner == auth())
+/// @@allow('all', list.space.members ? [user == auth()] && !list.private)
+/// @@deny('update', future().owner != owner)
+model Todo {
+    id String @id() @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId String
+    list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+    listId String
+    /// @length(1, 100)
+    title String
+    completedAt DateTime?
+}
+
+model Store {
+  id              String    @id @default(uuid())
+  name            String
+  userId          String
+  quickLink1   String   @default("https://unlimitednow.live/assets/images/logo3-369x208.png")
+  primaryprompt   String   @default("https://unlimitednow.live/assets/images/logo3-369x208.png")
+  billboards      Billboard[] @relation("StoreToBillboard")
+  categories      Category[] @relation("StoreToCategory")
+  products        Product[]  @relation("StoreToProduct")
+  sizes           Size[]     @relation("StoreToSize")
+  colors          Color[]     @relation("StoreToColor")
+  orders          Order[]     @relation("StoreToOrder")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Billboard {
+  id          String @id @default(uuid())
+  storeId     String
+  store       Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+  label       String
+  imageUrl    String
+  categories  Category[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([storeId])
+}
+
+model Category {
+  id          String      @id @default(uuid())
+  storeId     String      // Foreign Key to Store
+  store       Store       @relation("StoreToCategory", fields: [storeId], references: [id])
+  billboardId String      // Foreign Key to Billboard
+  billboard   Billboard   @relation(fields: [billboardId], references: [id])
+  name        String
+  products    Product[]   @relation("CategoryToProduct")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([storeId])
+  @@index([billboardId])
+}
+
+
+model Product {
+  id          String      @id @default(uuid())
+  storeId     String      // Foreign Key to Store
+  store       Store       @relation("StoreToProduct", fields: [storeId], references: [id])
+  categoryId  String      // Foreign Key to Category
+  category    Category    @relation("CategoryToProduct", fields: [categoryId], references: [id])
+  name        String
+  price       Int
+  userId      String
+  title       String
+  style       String
+  description String 
+  imagesUrl   String      @default("")
+  inventory   String
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
+  sizeId      String      // Foreign Key to Size
+  size        Size        @relation(fields: [sizeId], references: [id])
+  colorId     String      // Foreign Key to Color
+  color       Color       @relation(fields: [colorId], references: [id])
+  User        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  images      Image[]     // Relation to Image model
+  orderItems  OrderItem[] // Relation to Order model
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Cart        Cart[]
+  Review      Review[]
+  Purchased   Purchased[]
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([sizeId])
+  @@index([colorId])
+  @@index([userId])
+}
+
+model Order {
+  id        String    @id @default(uuid())
+  storeId     String    // Foreign Key to Store
+  store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+  orderItems OrderItem[] // Relation to OrderItem model
+  isPaid     Boolean   @default(false)
+  phone      String    @default("")
+  address    String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+// Intermediary for a many-to-many relationship
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String  // Foreign Key to Order
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String  // Foreign Key to Product
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Size {
+  id          String    @id @default(uuid())
+  storeId     String    // Foreign Key to Store
+  store       Store     @relation("StoreToSize", fields: [storeId], references: [id])
+  name        String
+  value       String
+  products    Product[] // Relation to Product model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model Color {
+  id          String   @id @default(uuid())
+  storeId     String   // Foreign Key to Store
+  store       Store    @relation("StoreToColor", fields: [storeId], references: [id])
+  name        String
+  value       String
+  products    Product[] // Relation to Product model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model Image {
+
+  id      String  @id @default(dbgenerated("concat('image_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  url     String
+  imageUrl    String  @default("")
+  description String?
+  postId      String
+  Post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)  
+  productId   String   // Foreign Key to Product
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productId])
+}
+
+
+
+model Follows {
+    follower    User   @relation("follower", fields: [followerId], references: [id])
+    followerId  String
+    following   User   @relation("following", fields: [followingId], references: [id])
+    followingId String
+
+    @@id([followerId, followingId])
+    @@index([followerId])
+    @@index([followingId])
+}
+
+model Post {
+  id      String  @id @default(dbgenerated("concat('post_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    caption   String?
+    fileUrl   String      @unique
+      content  String?
+  slug          String   @default(cuid())
+  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
+  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  
+  type    String  @default("IMAGE")
+  tags    String[]
+    likes     Like[]
+    savedBy   SavedPost[]
+    
+  authorId    String @default("1")
+  comments  Comment[]
+      site          Site?    @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  siteId        String?
+  Image         Image[]
+  Video         Video[]
+    user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String      @map("user_id")
+
+    @@index([userId])
+}
+
+
+model SavedPost {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([userId])
+}
+
+model Like {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([userId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    body      String
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    userId    String   @map("user_id")
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([postId])
+    @@index([userId])
+}
+
+
+model Link {
+    id String @id() @default(cuid())
+    domain String
+    key String
+    url String   
+    archived Boolean @default(false)
+    expiresAt DateTime?
+    password String?
+    proxy Boolean @default(false)
+    title String?
+    description String? @db.VarChar(280)
+    image String?  
+    utm_source String?
+    utm_medium String?
+    utm_campaign String?
+    utm_term String?
+    utm_content String?
+    ios String?  
+    android String?  
+    clicks Int @default(0)
+    publicStats Boolean @default(false)
+    user User? @relation(fields: [userId], references: [id])
+    userId String?
+    project Project? @relation(fields: [domain], references: [domain], onUpdate: Cascade, onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    zenstack_guard Boolean @default(true)
+
+        @@unique([key])
+    @@index([domain, archived, expiresAt, createdAt(sort: Desc)])
+    @@index([domain, archived, expiresAt, clicks(sort: Desc)])
+    @@index([domain, archived, expiresAt, userId, createdAt(sort: Desc)])
+    @@index([domain, archived, expiresAt, userId, clicks(sort: Desc)])
+    @@index([userId])
+}
+
+model Project {
+    id String @id() @default(cuid())
+    name String
+    slug String @unique()
+    logo String?
+    domain String @unique()
+    domainVerified Boolean @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    users ProjectUsers[]
+    invites ProjectInvite[]
+    domainLastChecked DateTime @default(now())
+    usage Int @default(0)
+    ownerUsageLimit Int @default(1000)
+    ownerExceededUsage Boolean @default(false)
+    links Link[]
+    zenstack_guard Boolean @default(true)
+}
+model ProjectInvite {
+    email String
+    expires DateTime
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
+    createdAt DateTime @default(now())
+    zenstack_guard Boolean @default(true)
+    @@unique([email, projectId])
+    @@index([projectId])
+}
+model ProjectUsers {
+    id String @id() @default(cuid())
+    role String @default("member")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt()
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId String
+    zenstack_guard Boolean @default(true)
+    @@unique([userId, projectId])
+    @@index([projectId])
+}
+model Blueprint {
+    id Int @id() @default(autoincrement())
+    title String
+    user User @relation(fields: [userId], references: [id])
+    userId String
+    zenstack_guard Boolean @default(true)
+}
+model Cart {
+  id        Int     @id @default(autoincrement())
+  productId  String
+  Product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  userId String
+  User User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  @@index([productId])
+  @@index([userId])
+}
+model Review {
+  id        Int     @id @default(autoincrement())
+  rating Int
+  commentry String
+  productId String
+  Product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  userId String
+  User User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  @@index([productId])
+  @@index([userId])
+}
+model Purchased {
+    id        Int     @id @default(autoincrement())
+    isPaid    Boolean
+    productId String
+    Product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+    userId String
+    User User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    @@index([productId])
+    @@index([userId])
+}
+
+
+
+enum TypePost {
+  IMAGE
+  VIDEO
+  POST
+}
+
+
+
+model Video {
+  id      String  @id @default(dbgenerated("concat('video_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  url     String
+  description String?
+  postId      String
+  Post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+model UserApiLimit {
+  id        String      @id @default(cuid())
+  userId    String   @unique
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserSubscription {
+  id        String      @id @default(cuid())
+  userId    String   @unique
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+}
