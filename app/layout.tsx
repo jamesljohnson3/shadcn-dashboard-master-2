@@ -10,6 +10,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Play } from "@next/font/google";
 import { Roboto } from "@next/font/google";
 import { NextAuthProvider } from "./components/NextAuthProvider";
+import Header from '@/components/layouts';
 
 const roboto = Roboto({
   weight: "400",
@@ -88,7 +89,7 @@ export default function RootLayout({
                
                  
                   <NextAuthProvider>
-              
+                  <Header />
                   {children}
                   </NextAuthProvider>
         
