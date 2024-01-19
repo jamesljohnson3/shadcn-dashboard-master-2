@@ -3,6 +3,7 @@ import { UserButton, currentUser } from "@clerk/nextjs";
 import { StoreSwitcher } from "@/components/ui/store-switcher";
 import { findManyStores } from "@/actions/store";
 import  Dash2 from "@/components/final-header"
+import Navigation from '@/components/Navigation/Navigation';
 
 interface NavbarProps {
   params: {
@@ -31,6 +32,7 @@ const Navbar: React.FC<NavbarProps> = async ({ params }) => {
         <div className="w-full sm:w-1/2">
          
 
+<Navigation />
         </div>
 
         {/* Right Menu Block (Hidden on small screens, takes 1/4 width on larger screens) */}
