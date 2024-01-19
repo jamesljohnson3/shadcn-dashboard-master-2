@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import GithubSignInButton from "@/app/components/GithubSignInButton";
 import GoogleSignInButton from "@/app/components/GoogleSignInButton";
 import { getServerSession } from "next-auth";
