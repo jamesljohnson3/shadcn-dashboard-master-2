@@ -145,4 +145,7 @@ export const authOptions: AuthOptions = {
       // Return the original session if there's no user in the session
       return params.session;
     }
-  }}
+    
+  }
+
+}
