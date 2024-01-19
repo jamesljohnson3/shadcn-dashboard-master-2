@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs";
-import DashNavbar from "@/components/Navbar";
 import NextTopLoader from "nextjs-toploader";
 
 export default function DashboardLayout({
@@ -36,9 +35,7 @@ export default function DashboardLayout({
     
     />
 
-  <DashNavbar params={{
-    storeId: userId
-  }} />
+
       <div className="flex-grow mt-12 md:mt-0 flex-1 w-full md:overflow-y-auto sm:p-6 md:p-12 max-w-7xl mx-auto">
         {children}
       </div>

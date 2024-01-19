@@ -1,7 +1,5 @@
 "use client"
 
-import Navigation from '@/components/Navigation/Navigation';
-
 import Header from './header'
 
 import { getSession } from 'next-auth/react';
@@ -73,9 +71,7 @@ const Layout = () => {
 
         <Header />
       </div>
-     <div style={{ width: '100%' }}>
-        <Navigation />
-      </div>
+    
 
 
      
