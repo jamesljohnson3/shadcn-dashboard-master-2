@@ -5,7 +5,6 @@ import { authOptions } from "@/app/utils/auth";
 import { redirect } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SideNavbar from "@/components/SideNavbar";
-import Navigation from '@/components/Navigation/Navigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -19,7 +18,7 @@ export default async function DashboardLayout({
   if (!session) {
     return redirect("/login");
   } else {
-    return    <>         <Navigation />
+    return    <>        
     <div
     className={cn(
       "min-h-screen w-full bg-white text-black flex ",
