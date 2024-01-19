@@ -6,9 +6,9 @@
   justify-content: space-between;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 960px) {
   .container {
-    margin-top: 27px;
+    margin-top: 36px;
   }
 }
 
