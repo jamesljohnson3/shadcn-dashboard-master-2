@@ -8,7 +8,7 @@ import {
   AiOutlineFullscreenExit,
 } from "react-icons/ai";
 import Overlay from "./adsOverlay/Overlay";
-import { useAppContext } from '../utils/AppContext';
+import { useAppContext } from '@/app/utils/AppContext';
 
 const Player = ({ prerollVideoURL, mainVideoURL, source, width = 100, loop = false }) => {
   const videoRef = useRef(null);
