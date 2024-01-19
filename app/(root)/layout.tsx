@@ -9,7 +9,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   if (!userId) {
     return (
-      <div className="flex-grow mt-6 w-full md:overflow-y-auto sm:p-6">
+      <div className="flex-grow  w-full md:overflow-y-auto sm:p-6">
         {children}
       </div>
     );

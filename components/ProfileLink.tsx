@@ -10,7 +10,7 @@ import UserAvatar from "./UserAvatar";
 function ProfileLink({ user }: { user: User }) {
   const pathname = usePathname();
 
-  const href = `/dashboard/${user.username}`;
+  const href = `/${user.username}`;
   const isActive = pathname === href;
   console.log('userID:',user);
 
