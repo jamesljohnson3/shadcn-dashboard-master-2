@@ -72,7 +72,7 @@ const Header = (props: HeaderProps) => {
           content: '""',
           position: 'absolute',
           inset: 0,
-          bottom: '-3px',
+          bottom: '0px',
           backdropFilter: 'blur(16px)',
           mask: 'linear-gradient(to-b, black, transparent)',
           WebkitMask: 'linear-gradient(to bottom, black 60px, transparent)',
