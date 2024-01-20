@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           storeId: userId
         }} />
 
-        <div className="flex h-screen relative flex-col md:flex-row md:overflow-hidden">
+        <div className=" h-screen relative flex-col md:flex-row md:overflow-hidden">
           {children}
         </div>
       </div>
