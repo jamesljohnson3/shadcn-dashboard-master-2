@@ -69,7 +69,7 @@ const Layout = () => {
 <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ width: '100%' }}>
 
-   
+        <Header />
       </div>
     
 
