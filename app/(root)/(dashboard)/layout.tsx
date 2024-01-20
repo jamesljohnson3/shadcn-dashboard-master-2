@@ -21,7 +21,7 @@ export default async function DashboardLayout({
     return    <>        
     <div
     className={cn(
-      "min-h-screen w-full bg-white text-black flex ",
+      "min-h-screen w-full flex ",
       {
         "debug-screens": process.env.NODE_ENV === "development"
       }
