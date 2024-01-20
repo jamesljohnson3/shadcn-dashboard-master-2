@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="flex flex-grow flex-col min-h-screen min-w-full bg-background">
+      <div className=" flex-grow flex-col min-h-screen min-w-full bg-background">
         <NextTopLoader
           color="#7B00D3"
           initialPosition={0.78}
