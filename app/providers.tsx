@@ -44,6 +44,8 @@ export const Providers = ({ children }: PropsWithChildren) => {
     client={trpcClient}
     queryClient={queryClient}>
     <QueryClientProvider client={queryClient}> <CacheProvider>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <ChakraProvider theme={customTheme}>
         <Global styles={GlobalStyle} />
 
    <SaasProvider linkComponent={Link}>    <NextUIProvider><ThemeProvider
@@ -53,6 +55,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
   >
 {children}  </ThemeProvider>  </NextUIProvider>
 </SaasProvider>
+    </ChakraProvider>  
     </CacheProvider>
             </QueryClientProvider>
         </trpc.Provider></AppProvider>

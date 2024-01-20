@@ -80,8 +80,9 @@ export default function RootLayout({
       
 
 
-  
-            
+            <DesignerContextProvider
+      
+            >
               <Providers>
                 <div >
                   {/* Include your Header, Navigation, and Footer components here */}
@@ -94,6 +95,7 @@ export default function RootLayout({
         
                 </div>
               </Providers>
+            </DesignerContextProvider>
 
       
       </body>
