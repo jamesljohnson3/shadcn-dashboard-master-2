@@ -8,7 +8,7 @@ import Wrapper from "@/components/wrapper";
 import { Button } from "@/components/ui/button";
 import { signOut as nextAuthSignOut } from "next-auth/react";
 import Cookies from 'js-cookie'
-import { auth } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 
 const containerStyle = {
   display: 'flex',
@@ -18,6 +18,7 @@ const containerStyle = {
 };
 
 function Upsale() {
+  const clerk = useClerk();
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false); // State to track loading state
 
@@ -28,8 +29,6 @@ function Upsale() {
   );
 
   const apiUrl = "https://hook.us1.make.com/cbwgo5dvyfyvnbzc46mhwcb21qk9utpb";  // Replace with your actual API endpoint
-  const { user } = auth();
-  console.log("Fetched userId:", user);
 
   const handleActivateAccount = async () => {
     setLoading(true);
@@ -52,6 +51,7 @@ function Upsale() {
       }
   // Sign the user out
   await nextAuthSignOut();
+  await clerk.signOut();
 
   // Redirect to the login page
   window.location.href = '/login';
@@ -89,14 +89,8 @@ function Upsale() {
                   </p>
                   <li>
           <a href="/dashboard/marketing">/marketing</a>
-        </li>     {user
- ? (
-        <>         <p> 🧠 </p>
-
- </>
-        ) : (
-          <>
-           <CookieButton userKey="Admin" />
+        </li>
+                  <CookieButton userKey="Admin" />
         <CookieButton userKey="Investor" />
                   <div className="">
                     <Button
@@ -108,9 +102,6 @@ function Upsale() {
                       {loading ? 'Activating account...' : 'Start free trial'}
                     </Button>
                   </div>
-          </>
-        )}
-                
                 </div>
               </Wrapper>
             </section>
