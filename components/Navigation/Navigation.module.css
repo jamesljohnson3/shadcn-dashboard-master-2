@@ -9,6 +9,7 @@
 @media (max-width: 960px) {
   .container {
     margin-top: 25px;
+    margin-bottom: 25px;
   }
 }
 
