@@ -13,9 +13,7 @@ export function TestimonialsSection(): JSX.Element {
           <h2 className="font-urbanist text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             <Balancer>
               Join a Growing <br /> Team of{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-purple-400 bg-clip-text text-transparent">
-                Happy Users
-              </span>
+              
             </Balancer>
           </h2>
           <h3 className="max-w-[42rem] text-muted-foreground sm:text-xl sm:leading-8">
