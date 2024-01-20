@@ -80,7 +80,9 @@ export default function RootLayout({
       
 
 
-        
+  
+            
+              <Providers>
                 <div >
                   {/* Include your Header, Navigation, and Footer components here */}
                
@@ -91,7 +93,8 @@ export default function RootLayout({
                   </NextAuthProvider>
         
                 </div>
-            
+              </Providers>
+
       
       </body>
     </html>
