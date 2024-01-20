@@ -203,15 +203,7 @@ span {
 
 }
 
-h1 {
-  padding-left: 5%;
-  line-height: var(--headlineLineHeightBig);
-  font-size: var(--headlineBig);
-  mix-blend-mode: difference;
-  font-family: 'Cormorant Garamond', serif;
-  text-transform: uppercase;
-  font-weight: 300;
-}
+
 
 .skill {
   position: absolute;
@@ -244,14 +236,7 @@ h1 {
   mix-blend-mode: difference;
 }
 
-.projects-wrapper h2 {
-  margin-right: auto;
-  font-size: var(--headlineMedium);
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-weight: 400;
-}
-
+ 
 .project {
   height: 100vh;
   display: flex;
