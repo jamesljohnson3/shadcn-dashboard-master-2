@@ -8,7 +8,7 @@ const spaceName = getSpaceNameFromUrl();
 
 export default function Home({ spaces }: { spaces: Spaces }) {
 	return (  <SpacesProvider client={spaces}>
-		<SpaceProvider name={spaceName}>
+		<SpaceProvider name={"test"}>
 		 
 		<main className="">
 			<h1 className="font-bold text-4xl">GPT4 Vision Chatbot </h1>
