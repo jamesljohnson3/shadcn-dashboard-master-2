@@ -1,23 +1,12 @@
-import Spaces from "@ably/spaces";
-import { nanoid } from "nanoid";
-import { Realtime } from "ably";
-import App from "./space";
-import { AblyProvider } from "ably/react";
-import * as Ably from "ably";
-import { env } from "process";
+import ChatSection from "./components/chat-section";
+import Footer from "./components/footer";
 
-const client = new Ably.Realtime.Promise({ authUrl: '/api/ably' })
-
-const spaces = new Spaces(client);
-
-
-export function Ablytest() {
-    return (
-      <div>
-  <AblyProvider client={client}>
-    <App spaces={spaces} />
-  </AblyProvider>
-      </div>
-    )
-  }
-  
+export default function Home() {
+	return (
+		<main className="flex min-h-screen flex-col items-center gap-10 p-24 bg-gradient-to-bl from-slate-300 to-blue-50">
+			<h1 className="font-bold text-4xl">GPT4 Vision Chatbot Demo</h1>
+			<ChatSection />
+			<Footer />
+		</main>
+	);
+}
