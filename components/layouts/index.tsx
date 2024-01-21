@@ -1,11 +1,13 @@
-"use client"
 
 import Header from './header'
 
-import { getSession } from 'next-auth/react';
-const Layout = () => {
-  const session =  getSession();
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/utils/auth";
+
+
+const Layout = async () => {
+  const session = await getServerSession(authOptions);
   if (!session) {
     return <div>Loading...</div>;
   }
