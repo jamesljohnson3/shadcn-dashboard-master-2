@@ -1,11 +1,6 @@
-/**
- * Warning: Opening too many live preview tabs will slow down performance.
- * We recommend closing them after you're done.
- */
+
 import React from "react";
-import "../global.css";
 import dynamic from 'next/dynamic';
-import Spaces from "@ably/spaces";
 
 const PubSubClient = dynamic(() => import('./pubsub-client'), {
   ssr: false,
