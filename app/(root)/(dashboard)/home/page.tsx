@@ -2,7 +2,7 @@ import { compact, pick } from 'lodash';
 import { Images, TagWithImageCount } from '@/components/images';
 import { IMAGES_PER_PAGE_COUNT, IMAGE_SIZE } from '@/utils/constants';
 import { getXataClient } from '@/utils/xata';
-
+import { auth } from "@clerk/nextjs";
 const xata = getXataClient();
 
 const getImageCount = async () => {
@@ -96,8 +96,10 @@ export default async function Page({ searchParams }: { searchParams: { page: str
       imageCount: tagSummary.imageCount
     };
   }) as TagWithImageCount[];
+  
+  const { user } = auth();
 
-  const readOnly = process.env.READ_ONLY === 'true';
-
+  const readOnly = !user; // true if user doesn't exist, false if user exists
+  
   return <Images images={images} imageUrl={imageUrl} tags={tags} page={page} readOnly={readOnly} />;
 }
