@@ -28,10 +28,9 @@ export default async function DashboardLayout({
     )}
   >
     {/* sidebar */}
-    {/* <p className="border">Sidebar</p> */}
     <SideNavbar />
     {/* main page */}
-    <div className="p-8 w-full">{children}</div>
+    <div className="p-4 w-full">{children}</div>
   </div></>
 }
 }
