@@ -6,10 +6,7 @@ import { AblyProvider } from "ably/react";
 import * as Ably from "ably";
 import { env } from "process";
 
-const client = new Ably.Realtime.Promise({ 
-  clientId: nanoid(),
-  key: env.VITE_ABLY_KEY,
-});
+const client = new Ably.Realtime.Promise({ authUrl: '/api/ably' })
 
 const spaces = new Spaces(client);
 
