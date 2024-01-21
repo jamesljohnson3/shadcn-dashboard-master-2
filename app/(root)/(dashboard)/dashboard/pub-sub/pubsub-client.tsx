@@ -11,7 +11,7 @@ import App from "./space";
 
 export default function PubSubClient() {
 
-  const client = new Ably.Realtime.Promise ({ authUrl: '/token', authMethod: 'POST' });
+  const client = new Ably.Realtime.Promise ({ authUrl: '/api/ably', authMethod: 'POST' });
   const spaces = new Spaces(client);
 
   return (

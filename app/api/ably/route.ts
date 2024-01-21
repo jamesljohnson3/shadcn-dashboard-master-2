@@ -1,18 +1,23 @@
-import Ably from "ably/promises";
+import { NextRequest, NextResponse } from 'next/server'
+import * as Ably from "ably/promises";
 
-export async function GET(request: any) {
-    const apiKey = process.env.ABLY_API_KEY;
+export async function POST(req: Request) {
+  if (!process.env.ABLY_API_KEY) {
+    return NextResponse.json({ errorMessage: `Missing ABLY_API_KEY environment variable.
+        If you're running locally, please ensure you have a ./.env file with a value for ABLY_API_KEY=your-key.
+        If you're running in Netlify, make sure you've configured env variable ABLY_API_KEY. 
+        Please see README.md for more details on configuring your Ably API Key.`,
+      },{ 
+        status: 500,
+        headers: new Headers({
+          "content-type": "application/json"
+        })
+      });
+  }
 
-    if (!apiKey) {
-        console.error("ABLY_API_KEY is undefined");
-        // Adjust the response based on your environment/framework
-        return new Response("ABLY_API_KEY is undefined", { status: 500 });
-    }
-
-    const client = new Ably.Realtime(apiKey);
-    const tokenRequestData = await client.auth.createTokenRequest({ clientId: 'upbeta' });
-
-    console.log(`Request: ${JSON.stringify(tokenRequestData)}`);
-    // Adjust the response based on your environment/framework
-    return new Response(JSON.stringify(tokenRequestData), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  const clientId = ( (await req.formData()).get('clientId')?.toString() ) || process.env.DEFAULT_CLIENT_ID || "NO_CLIENT_ID";
+  const client = new Ably.Rest(process.env.ABLY_API_KEY);
+  const tokenRequestData = await client.auth.createTokenRequest({ clientId: clientId });
+  console.log(tokenRequestData)
+  return NextResponse.json(tokenRequestData)
 }
