@@ -1,12 +1,14 @@
-import { AblyProvider } from "ably/react";
 import Spaces from "@ably/spaces";
 import { nanoid } from "nanoid";
 import { Realtime } from "ably";
 import App from "./space";
+import { AblyProvider } from "ably/react";
+import * as Ably from "ably";
+import { env } from "process";
 
-const client = new Realtime.Promise({
+const client = new Ably.Realtime.Promise({ 
   clientId: nanoid(),
-  key: import.meta.env.VITE_ABLY_KEY,
+  key: env.VITE_ABLY_KEY,
 });
 
 const spaces = new Spaces(client);
