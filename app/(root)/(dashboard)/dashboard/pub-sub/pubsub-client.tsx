@@ -16,7 +16,7 @@ export default function PubSubClient() {
 
   return (
     <AblyProvider client={ client }>
-      <div className="flex flex-row justify-center">
+      <div className="justify-center">
         <div className="">
         <App spaces={spaces} />
           
