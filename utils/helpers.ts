@@ -1,3 +1,5 @@
+"use client"
+
 import { type SpaceMember } from "@ably/spaces";
 import { generate } from "random-words";
 
