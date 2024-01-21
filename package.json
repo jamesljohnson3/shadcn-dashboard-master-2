@@ -118,6 +118,7 @@
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
     "resend": "^2.1.0",
+    "sass": "^1.70.0",
     "slugify": "^1.6.6",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7",
