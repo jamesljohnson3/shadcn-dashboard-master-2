@@ -96,10 +96,10 @@ export default async function Page({ searchParams }: { searchParams: { page: str
       imageCount: tagSummary.imageCount
     };
   }) as TagWithImageCount[];
-
-const { isSignedIn } = useAuth();
-
-const readOnly = !isSignedIn; // true if user is not signed in, false if user is signed in
-
-  return <Images images={images} imageUrl={imageUrl} tags={tags} page={page} readOnly={readOnly} />;
+  const { isSignedIn } = useAuth();
+  const readOnly = !isSignedIn;
+  
+  return <Images images={images} imageUrl={imageUrl} tags={tags} page={page} readOnly={readOnly ? 'true' : 'false'} />;
+  
+  
 }
