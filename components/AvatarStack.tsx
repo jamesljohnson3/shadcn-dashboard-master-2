@@ -1,3 +1,7 @@
+
+
+"use client"
+
 import { useMemo } from "react";
 import { useEffect } from "react";
 import { useSpace, useMembers } from "@ably/spaces/react";
