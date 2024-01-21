@@ -1,22 +1,24 @@
-import ChatSection from "./components/chat-section";
-import Footer from "./components/footer";
+import { AblyProvider } from "ably/react";
 import Spaces from "@ably/spaces";
-import { SpaceProvider, SpacesProvider } from "@ably/spaces/react";
-import AvatarStack from "@/components/AvatarStack";
-import { getSpaceNameFromUrl } from "@/utils/helpers";
-const spaceName = getSpaceNameFromUrl();
+import { nanoid } from "nanoid";
+import { Realtime } from "ably";
+import App from "./space";
 
-export default function Home({ spaces }: { spaces: Spaces }) {
-	return (  <SpacesProvider client={spaces}>
-		<SpaceProvider name={spaceName}>
-		 
-		<main className="">
-			<h1 className="font-bold text-4xl">GPT4 Vision Chatbot </h1>
-			<AvatarStack />
-			<ChatSection />
-			<Footer />
-		</main>
-    </SpaceProvider>
-  </SpacesProvider>
-	);
-}
+const client = new Realtime.Promise({
+  clientId: nanoid(),
+  key: import.meta.env.VITE_ABLY_KEY,
+});
+
+const spaces = new Spaces(client);
+
+
+export function Ablytest() {
+    return (
+      <div>
+  <AblyProvider client={client}>
+    <App spaces={spaces} />
+  </AblyProvider>
+      </div>
+    )
+  }
+  
