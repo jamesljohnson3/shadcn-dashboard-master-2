@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ably/spaces": "^0.3.0",
     "@auth/prisma-adapter": "^1.0.5",
     "@builder.io/react": "^3.1.1",
     "@chakra-ui/next-js": "^2.2.0",
@@ -90,6 +91,7 @@
     "@uppy/transloadit": "^3.4.0",
     "@vercel/edge-config": "^0.2.1",
     "@xata.io/client": "^0.28.3",
+    "ably": "^1.2.48",
     "ai": "^2.2.31",
     "bcrypt": "^5.1.1",
     "chroma-js": "^2.4.2",
