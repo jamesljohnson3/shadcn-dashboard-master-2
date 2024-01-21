@@ -1,8 +1,8 @@
 
 import Spaces from "@ably/spaces";
 import { SpaceProvider, SpacesProvider } from "@ably/spaces/react";
-import AvatarStack from "../../components/AvatarStack";
-import { getSpaceNameFromUrl } from "../../utils/helpers";
+import AvatarStack from "@/components/AvatarStack";
+
 const spaceName = "";
 
 export default function Home({ spaces }: { spaces: Spaces }) {
