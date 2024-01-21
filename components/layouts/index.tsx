@@ -7,7 +7,7 @@ const Layout = () => {
   const session =  getSession();
 
   if (!session) {
-    return   ;
+    return <div>Loading...</div>;
   }
 
   return (
