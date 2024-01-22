@@ -49,7 +49,7 @@ const Header = (props: HeaderProps) => {
     
     />
 <Box
-
+maxHeight='50px'
       ref={ref}
       as="header"
       top="0"

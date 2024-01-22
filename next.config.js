@@ -50,6 +50,12 @@ const nextConfig = {
           protocol: 'https',
           hostname: 'unlimitednow.live',
         },
+        {
+          protocol: 'https',
+          hostname: 'avatars.githubusercontent.com',
+          port: '',
+          pathname: '**'
+        }
       ],
     },
    
