@@ -52,7 +52,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
       },
       onFinish() {
         if (!path.includes('chat')) {
-          window.history.pushState({}, '', `/dashboard/chat-gpt4/${id}`)
+          window.history.pushState({}, '', `/dashboard/chats/${id}`)
         }
       }
     })

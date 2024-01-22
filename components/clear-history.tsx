@@ -61,7 +61,7 @@ export function ClearHistory({
                 }
 
                 setOpen(false);
-                router.push('/');
+                router.push('/dashboard/chats');
               });
             });
           } }
