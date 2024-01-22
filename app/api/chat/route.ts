@@ -1,8 +1,8 @@
 import { kv } from '@vercel/kv'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import OpenAI from 'openai'
+import { currentUser } from "@clerk/nextjs";
 
-import { currentUser } from '@clerk/nextjs';
 import { nanoid } from '@/lib/utils'
 
 export const runtime = 'edge'
@@ -14,8 +14,19 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   const json = await req.json()
   const { messages, previewToken } = json
- 
 
+  const user = await currentUser();
+
+  if (!user) {
+    return new Response('Unauthorized', {
+      status: 401
+    })
+  }
+
+  if (previewToken) {
+    openai.apiKey = previewToken
+  }
+const userId = user.id
   const res = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages,
@@ -32,7 +43,7 @@ export async function POST(req: Request) {
       const payload = {
         id,
         title,
-        userId: "user_2EYuQjGIJ0nDdVCGVFyVSoqvtfH",
+        userId,
         createdAt,
         path,
         messages: [
@@ -44,15 +55,11 @@ export async function POST(req: Request) {
         ]
       }
       await kv.hmset(`chat:${id}`, payload)
-      await kv.zadd(`user:chat:${"user_2EYuQjGIJ0nDdVCGVFyVSoqvtfH"}`, {
+      await kv.zadd(`user:chat:${userId}`, {
         score: createdAt,
         member: `chat:${id}`
       })
-      console.log("getChats:", payload);
-      console.log("getChats:", kv);
-
     }
-    
   })
 
   return new StreamingTextResponse(stream)
