@@ -17,6 +17,8 @@ import { Global } from '@emotion/react';
 import { GlobalStyle } from '../theme/globalstyles';
 import { default as theme } from '../theme/theme';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { SidebarProvider } from '@/lib/hooks/use-sidebar'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 
 const customTheme = extendTheme(theme);
@@ -52,8 +54,9 @@ export const Providers = ({ children }: PropsWithChildren) => {
   enableSystem={false}
   defaultTheme="light"
   attribute="class"
-  >
-{children}  </ThemeProvider>  </NextUIProvider>
+  >     <SidebarProvider>
+  <TooltipProvider>{children}</TooltipProvider>
+</SidebarProvider>  </ThemeProvider>  </NextUIProvider>
 </SaasProvider>
     </ChakraProvider>  
     </CacheProvider>
