@@ -14,18 +14,7 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   const json = await req.json()
   const { messages, previewToken } = json
-  const user = await currentUser();
-
-  if (!user) {
-    return new Response('Unauthorized', {
-      status: 401
-    })
-  }
-  const userId = user.id;
-
-  if (previewToken) {
-    openai.apiKey = previewToken
-  }
+ 
 
   const res = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -43,7 +32,7 @@ export async function POST(req: Request) {
       const payload = {
         id,
         title,
-        userId,
+        userId: "user_2EYuQjGIJ0nDdVCGVFyVSoqvtfH",
         createdAt,
         path,
         messages: [
@@ -55,7 +44,7 @@ export async function POST(req: Request) {
         ]
       }
       await kv.hmset(`chat:${id}`, payload)
-      await kv.zadd(`user:chat:${userId}`, {
+      await kv.zadd(`user:chat:${"user_2EYuQjGIJ0nDdVCGVFyVSoqvtfH"}`, {
         score: createdAt,
         member: `chat:${id}`
       })
