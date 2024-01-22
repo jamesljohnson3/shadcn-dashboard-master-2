@@ -48,7 +48,11 @@ export async function POST(req: Request) {
         score: createdAt,
         member: `chat:${id}`
       })
+      console.log("getChats:", payload);
+      console.log("getChats:", kv);
+
     }
+    
   })
 
   return new StreamingTextResponse(stream)
