@@ -12,12 +12,16 @@ export async function getChats(userId?: string | null) {
   if (!userId) {
     return []
   }
+  console.log("getChats:", userId);
 
   try {
     const pipeline = kv.pipeline()
+    console.log("getChats:", pipeline);
+
     const chats: string[] = await kv.zrange(`user:chat:${userId}`, 0, -1, {
       rev: true
     })
+    console.log("getChats:", chats);
 
     for (const chat of chats) {
       pipeline.hgetall(chat)
@@ -26,15 +30,20 @@ export async function getChats(userId?: string | null) {
     const results = await pipeline.exec()
 
     return results as Chat[]
+
   } catch (error) {
     return []
+    
   }
 }
 
 export async function getChat(id: string, userId: string) {
   const chat = await kv.hgetall<Chat>(`chat:${id}`)
+  console.log("getChat:", userId);
 
   if (!chat || (userId && chat.userId !== userId)) {
+      console.log("getChat:", userId);
+
     return null
   }
 
@@ -43,6 +52,7 @@ export async function getChat(id: string, userId: string) {
 
 export async function removeChat({ id, path }: { id: string; path: string }) {
   const session = await getServerSession(authOptions);
+  console.log("removeChat:", session);
 
   if (!session) {
     return {
@@ -67,6 +77,7 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
 export async function clearChats() {
   const session = await getServerSession(authOptions);
+  console.log("clearChats:", session);
 
   if (!session?.user?.id) {
     return {
@@ -103,6 +114,7 @@ export async function getSharedChat(id: string) {
 
 export async function shareChat(id: string) {
   const session = await getServerSession(authOptions);
+  console.log("shareChat", session);
 
   if (!session?.user?.id) {
     return {
