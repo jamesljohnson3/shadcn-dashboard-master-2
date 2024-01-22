@@ -1,5 +1,6 @@
 import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { Chat } from '@/components/chat'
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/utils/auth";
@@ -40,5 +41,5 @@ export default async function ChatPage({ params }: ChatPageProps) {
     notFound()
   }
 
-  return<></>
+  return <Chat id={chat.id} initialMessages={chat.messages} />
 }
