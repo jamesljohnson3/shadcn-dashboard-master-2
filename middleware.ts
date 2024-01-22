@@ -23,6 +23,7 @@ export default authMiddleware({
  "/login",
  "/dashboard(.*)",
  "/p(.*)",
+ "/"
   ],
 
   afterAuth(auth, req) {
