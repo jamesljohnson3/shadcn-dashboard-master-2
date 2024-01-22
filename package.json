@@ -100,6 +100,7 @@
     "clsx": "^2.0.0",
     "dayjs": "^1.11.10",
     "deep-chat-react": "^1.4.6",
+    "framer-motion": "^10.18.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.292.0",
     "ms": "^2.1.3",
