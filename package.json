@@ -90,6 +90,7 @@
     "@uppy/react": "^3.2.1",
     "@uppy/transloadit": "^3.4.0",
     "@vercel/edge-config": "^0.2.1",
+    "@vercel/kv": "^1.0.1",
     "@xata.io/client": "^0.28.3",
     "ably": "^1.2.48",
     "ai": "^2.2.31",
