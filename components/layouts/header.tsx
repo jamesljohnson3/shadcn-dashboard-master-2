@@ -49,7 +49,6 @@ const Header = (props: HeaderProps) => {
     
     />
 <Box
-maxHeight='50px'
       ref={ref}
       as="header"
       top="0"
@@ -66,6 +65,8 @@ maxHeight='50px'
       {...props}
     >
       <Box
+      maxHeight='40px'
+
         zIndex="1"
         position="relative"
         _before={{
