@@ -1,53 +1,25 @@
+
 import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { NextResponse } from 'next/server'
 
 export default authMiddleware({
-  publicRoutes: [
-    "/terms-conditions",
-    "/signup(.*)",
-    "/signin(.*)",
-    "/register",
-    "/demo",
-    "/sites(.*)",
-    "/site(.*)",
-    "/home(.*)",
-    "/post(.*)",
-    "/welcome",
-    "/auth",
-    "/sign-up(.*)",
-    "/sign-in(.*)",
-    "/login",
-    "/dashboard(.*)",
-    "/p(.*)",
-    "/"
-  ],
-
-  afterAuth(auth, req) {
-    if (auth.isPublicRoute) {
-      // do nothing for public routes
-      return;
-    }
-
-    const url = new URL(req.nextUrl.origin);
-
+  afterAuth(auth, req, evt) {
+    // Redirect non-logged-in users to the sign-in route if they try to access a protected route
     if (!auth.userId && !auth.isPublicRoute) {
-      // if the user tries to access a private route without being authenticated,
-      // redirect to login page
-      url.pathname = "/login";
       return redirectToSignIn({ returnBackUrl: req.url });
     }
 
-    if (auth.userId && !auth.isPublicRoute) {
-      // if the user is logged in and trying to access a protected route,
-      // allow them to access the route
-      return;
+    // Allow all logged-in users to access every route
+    if (auth.userId) {
+      return NextResponse.next();
     }
 
-    // All other cases (e.g., not logged in but accessing a public route)
-    // can be handled as needed
+    // For non-logged-in users, allow access only to the "/" route
+    if (!auth.userId && auth.isPublicRoute && req.url === "/") {
+      return NextResponse.next();
+    }
+
+    // Redirect non-logged-in users to the sign-in route for other routes
+    return redirectToSignIn({ returnBackUrl: req.url });
   },
 });
-
-export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ["/((?!api|_next/static|_next/image|.png).*)"],
-};
