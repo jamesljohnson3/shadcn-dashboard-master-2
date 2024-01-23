@@ -1,12 +1,12 @@
 
-import { NextResponse } from 'next/server'
-// middleware.ts
-
 import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { NextResponse } from 'next/server'
 
 export default authMiddleware({
-  publicRoutes: ["/"], // Allow access to the "/" route for all users
-  
+  // Specify routes that should be accessible without authentication
+  publicRoutes: ["/", "/login"],
+
+  // This function is called after the authentication middleware is executed
   afterAuth(auth, req, evt) {
     // Allow all logged-in users to access every route
     if (auth.userId) {
