@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
-import { Toaster, toast } from 'sonner';
+import { toast } from 'react-hot-toast'
 
 import { ServerActionResult, type Chat } from '@/lib/types'
 import {
@@ -43,8 +43,6 @@ export function SidebarActions({
   return (
     <>
       <div className="space-x-1">
-      <Toaster />
-
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -111,7 +109,7 @@ export function SidebarActions({
 
                   setDeleteDialogOpen(false)
                   router.refresh()
-                  router.push('/')
+                  router.push('/go')
                   toast.success('Chat deleted')
                 })
               }}
